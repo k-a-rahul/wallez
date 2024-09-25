@@ -4,6 +4,7 @@ import { Loader } from "./Comps/Loader";
 import Modalview from "./Comps/Modalview";
 import { Card } from "./Comps/Card";
 import { Toast } from "./Comps/Toast";
+import { Page } from "./Pages/Page";
 
 function App() {
   const [data, setData] = useState([]);
@@ -11,8 +12,10 @@ function App() {
   const [isloading, setIsloading] = useState(false);
   const [page, setPage] = useState(1);
   const [phone, setPhone] = useState(true);
-  const [show, setShow] = useState(false);
+  const [showtoast, setShowtoast] = useState(false);
   const [text, setText] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [show,setShow] =useState(false)
 
   const randompage = () => Math.ceil(Math.random() * 100);
 
@@ -31,13 +34,11 @@ function App() {
           Authorization: apiKey,
         },
       });
-      if (!response.ok)
+      if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
-      else {
+      } else {
         const res = await response.json();
-        query === ""
-          ? setData((prev) => [...prev, ...new Set([...res.photos])])
-          : setData(res.photos);
+        setData((prev) => [...prev, ...new Set([...res.photos])]);
       }
     } catch (error) {
       alert("Fetch error:", error);
@@ -45,15 +46,13 @@ function App() {
       setIsloading(false);
     }
   };
-  
 
   const loadmore = () => {
-    [null,undefined,""].includes(query)
+    [null, undefined, ""].includes(query)
       ? (setPage((prevpage) => prevpage + 1),
         fetchData({ param: `curated?page=${randompage()}` }))
       : (setPage((prevpage) => prevpage + 1),
-        fetchData({ param: `search?query=${query}&page=${page + 1}` }),
-        setData((prev) => [...prev, ...new Set([...data])]));
+        fetchData({ param: `search?query=${query}&page=${page + 1}` }));
   };
 
   const handlechange = (e) => {
@@ -61,72 +60,83 @@ function App() {
   };
   const onkeydown = (e) => {
     if (e.key === "Enter") {
-      if (query === "") {
+      if ([""].includes(query)) {
         setText("Enter a valid keyword to search");
-        setShow(true);
-      } else fetchData({ param: `search?query=${query}` });
+        setShowtoast(true);
+      } else {
+        setLoading(true);
+        fetchData({ param: `search?query=${query}` });
+        setTimeout(() => {
+          setLoading(false);
+        }, 3000);
+      }
     }
   };
 
-  const handlephoneclick = () => setPhone(true);
-
-  const handledeskclick = () => setPhone(false);
-  
-  const hide = () => {
-    setShow(false);
+  const handlephoneclick = () => {
+    setPhone(true);
   };
-  useEffect(() => {
-    setTimeout(() => {
-      hide();
-    }, 4000);
-  }, []);
-  
-  console.log(data);
-  
+
+  const handledeskclick = () => {
+    setPhone(false);
+  };
+
+  showtoast
+    ? setTimeout(() => {
+        hide();
+      }, 5000)
+    : "";
 
   return (
     <>
-      <Toast show={show} hide={hide} text={text} />
+      <Toast show={showtoast} hide={() => setShowtoast(false)} text={text} />
+        <Modalview  child={''} show={show} hide={ ()=>setShow(false)}/>
       <Navbar
         handlephoneclick={handlephoneclick}
         handlechange={handlechange}
         handledeskclick={handledeskclick}
         onkeydown={onkeydown}
       />
-      <div className="w-full h-auto mt-10">
-        <div
-          className={`p-4 grid ${
-            phone
-              ? `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5`
-              : `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
-          } flex-wrap gap-4 align-middle place-items-center justify-items-center justify-center items-center`}
-        >
-          {data.map((item) => {
-            return (
-              <Card
-                key={item?.id}
-                id={item.id}
-                img={phone ? item?.src?.portrait : item?.src?.landscape}
-                text={item?.photographer}
-                alt={item?.alt}
-                url={item.src.original}
-              />
-            );
-          })}
+      {loading ? (
+        <div>
+          <Page />
         </div>
+      ) : (
+        <div className="w-full h-auto mt-14">
+          <div
+            className={`p-4 grid ${
+              phone
+                ? `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5`
+                : `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
+            } flex-wrap gap-4 align-middle place-items-center justify-items-center justify-center items-center`}
+          >
+            {data.map((item) => {
+              return (
+                <Card
+                  key={item?.id}
+                  id={item.id}
+                  img={phone ? item?.src?.portrait : item?.src?.landscape}
+                  text={item?.photographer}
+                  alt={item?.alt}
+                  url={item.src.large}
+                />
+              );
+            })}
+          </div>
           <div className="w-full flex justify-center items-center my-3">
             <button
               onClick={loadmore}
-              className={`text-xl text-black ${
+              className={`text-sm sm:text-xl text-black ${
                 isloading
                   ? "bg-none cursor-not-allowed"
                   : "bg-btnhover hover:-translate-y-1"
               }  rounded-md hover:text-white p-2 transition-all`}
             >
-              {isloading ? <Loader w={"full"} /> : "More images"}
+              {isloading ? <Loader w={"full"} /> : "Load More Wallz"}
             </button>
           </div>
-      </div>
+        </div>
+      )}
     </>
   );
 }

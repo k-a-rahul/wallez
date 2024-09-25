@@ -7,25 +7,28 @@ export const Card = ({
   text,
   w,
   h,
+  handleclick,
   file,
   isloading,url
 }) => {
-  const handleDownload = () => {
-    const link = document.createElement('a');
-    link.href = {url}; 
-    link.setAttribute('download', `${id}.jpeg`); 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  // const handleclick = () => {
+
+
+  //   // const link = document.createElement('a');
+  //   // link.href = {url}; 
+  //   // link.setAttribute('download', `${id}.jpeg`); 
+  //   // document.body.appendChild(link);
+  //   // link.click();
+  //   // document.body.removeChild(link);
+  // };
   
   return (
     <>
       <div
-        onClick={handleDownload}
+        onClick={handleclick}
         className={`w-${w ? w : "full"} h-${
           h ? h : "full"
-        } rounded-md sm:hover:scale-105 transition-all group p-1 flex flex-col justify-center items-center`}
+        } rounded-md sm:hover:scale-105 transition-all group flex flex-col justify-center items-center`}
       >
        {/* <a rel="noopener noreferrer" download={url}  href={url} >
         </a> */}

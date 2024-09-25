@@ -11,10 +11,9 @@ export default {
         'cardbg':'#8b92b7'
       },
       keyframes: {
-        'translate-x': {
-          '0%': { transform: 'translateX(0%)' },
-          '25%': { transform: 'translateX(-1%)' },
-          '50%': { transform: 'translateX(1%)' },
+        'translate-y': {
+          '0%': { transform: 'translateY(-50%)' },
+          '100%': { transform: 'translateY(50%)' },
         },
         'translate-y-2': {
           '0%': { transform: 'translateY(50%)' },
@@ -23,7 +22,7 @@ export default {
         
       },
       animation: {
-        'translate-x': 'translate-x .5s linear infinite',
+        'translate-y': 'translate-y 1s alternate-reverse infinite',
         'translate-y-2': 'translate-y-2 1s alternate-reverse infinite',
       },
       
