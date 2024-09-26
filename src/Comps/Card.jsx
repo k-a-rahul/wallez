@@ -25,7 +25,7 @@ export const Card = ({
   return (
     <>
       <div
-        onClick={handleclick}
+      onClick={handleclick}
         className={`w-${w ? w : "full"} h-${
           h ? h : "full"
         } rounded-md sm:hover:scale-105 transition-all group flex flex-col justify-center items-center`}

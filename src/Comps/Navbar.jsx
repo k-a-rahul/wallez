@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { LOGO } from "../../export";
 import { HiSearch } from "react-icons/hi";
-import { CgHomeAlt } from "react-icons/cg";
 
-function Navbar({
-  handlechange,
-  onkeydown,
-  value,
-  handlephoneclick,
-  handledeskclick,
-}) {
-  const [width, setWidth] = useState("20%");
-  const [data, setData] = useState("");
+function Navbar({ handlechange, onkeydown }) {
+  const [data, setData] = useState('cars');
+  const [navbar, setNavbar] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -40,22 +33,53 @@ function Navbar({
     window.location.reload();
   };
 
-  return (
-    <div
-      className={`bg-cardbg w-full h-14 fixed top-0 z-10 overflow-hidden p-2 flex justify-between items-center`}
-    >
-      <div className="flex justify-center items-center transition-all  ">
-        <div className={`w-12 `}>
-          <img
-            onClick={handleclick}
-            src={LOGO}
-            className="cursor-pointer hover:opacity-80 rounded-md mx-4 w-8 sm:w-12 "
-            alt=""
-          />
-        </div>
-      </div>
+  document.onscroll = () => {
+    if (window.scrollY > 100) {
+      setNavbar(true);
+    } else {
+      setNavbar(false);
+    }
+  };
 
-      {/* <div className="flex justify-center items-center gap-3">
+  return (
+    <>
+      {navbar ? (
+        <div className="w-full bg-none fixed top-0 z-20 my-1 flex justify-center items-center">
+          <div
+            className={`${
+              navbar ? "w-[40%]" : ""
+            } delay-75 p-1 transition-all bg-slate-100 rounded-md flex justify-center items-center`}
+          >
+            <div className="bg-slate-100 text-2xl">
+              <HiSearch />
+            </div>
+            <input
+              placeholder={`Search for "${data}"`}
+              onKeyDownCapture={onkeydown}
+              onChange={handlechange}
+              className={`w-full ${
+                navbar ? "h-11" : ""
+              } h-6 bg-slate-100  sm:w-full p-1 text-xs sm:text-lg text-black rounded-md outline-none transition-all`}
+            />
+          </div>
+        </div>
+      ) : (
+        <>
+          <div
+            className={`bg-mainbg w-full h-14 fixed top-0 z-10 overflow-hidden p-2 flex justify-between items-center`}
+          >
+            <div className="flex justify-center items-center transition-all  ">
+              <div className={`w-12 `}>
+                <img
+                  onClick={handleclick}
+                  src={LOGO}
+                  className="cursor-pointer hover:opacity-80 rounded-md mx-4 w-10 sm:w-12 "
+                  alt=""
+                />
+              </div>
+            </div>
+
+            {/* <div className="flex justify-center items-center gap-3">
         <button
           onClick={handlephoneclick}
           className={`text-white text-xs sm:text-sm rounded-md hover:bg-btnhover hover:rounded-md hover:text-black transition-all p-1`}
@@ -69,24 +93,23 @@ function Navbar({
           Desktop
         </button>
       </div> */}
-      <div
-        onFocus={() => setWidth("20%")}
-        onBlur={() => setWidth("20%")}
-        style={{ width: width }}
-        className={`delay-75 p-1 transition-all bg-slate-100 rounded-md flex justify-center items-center`}
-      >
-        <div className="bg-slate-100 text-3xl">
-          <HiSearch />
-        </div>
-        <input
-          placeholder={`Search for : ${data}`}
-          value={value}
-          onKeyDownCapture={onkeydown}
-          onChange={handlechange}
-          className="w-full h-6 bg-slate-100 sm:w-full p-1 text-xs sm:text-lg text-black rounded-md outline-none transition-all"
-        />
-      </div>
-    </div>
+            <div
+              className={`sm:w-[25%] delay-75 p-1 transition-all bg-slate-100 rounded-md flex justify-center items-center`}
+            >
+              <div className="bg-slate-100 text-2xl">
+                <HiSearch />
+              </div>
+              <input
+                placeholder={`Search for "${data}"`}
+                onKeyDownCapture={onkeydown}
+                onChange={handlechange}
+                className="w-full h-6 bg-slate-100 sm:w-full p-1 text-xs sm:text-lg text-black rounded-md outline-none transition-all"
+              />
+            </div>
+          </div>
+        </>
+      )}
+    </>
   );
 }
 

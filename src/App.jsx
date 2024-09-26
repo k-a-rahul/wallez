@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import Navbar from "./Comps/Navbar";
 import { Loader } from "./Comps/Loader";
-import Modalview from "./Comps/Modalview";
 import { Card } from "./Comps/Card";
 import { Toast } from "./Comps/Toast";
 import { Page } from "./Pages/Page";
+import { FaRegArrowAltCircleUp } from "react-icons/fa";
 
 function App() {
   const [data, setData] = useState([]);
@@ -15,7 +15,7 @@ function App() {
   const [showtoast, setShowtoast] = useState(false);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
-  const [show,setShow] =useState(false)
+  const [totopbtn, setTotopbtn] = useState(false);
 
   const randompage = () => Math.ceil(Math.random() * 100);
 
@@ -58,6 +58,11 @@ function App() {
   const handlechange = (e) => {
     setQuery(e.target.value);
   };
+  const scrolldown = () =>
+    document
+      .getElementById("bottomdiv")
+      .scrollIntoView({ block: "start", behavior: "smooth" });
+
   const onkeydown = (e) => {
     if (e.key === "Enter") {
       if ([""].includes(query)) {
@@ -69,16 +74,11 @@ function App() {
         setTimeout(() => {
           setLoading(false);
         }, 3000);
+        setTimeout(() => {
+          scrolldown();
+        }, 3500);
       }
     }
-  };
-
-  const handlephoneclick = () => {
-    setPhone(true);
-  };
-
-  const handledeskclick = () => {
-    setPhone(false);
   };
 
   showtoast
@@ -87,55 +87,73 @@ function App() {
       }, 5000)
     : "";
 
+  window.onscroll = () => {
+    if (window.scrollY > 100) {
+      setTotopbtn(true);
+    } 
+    else ""
+  };
+  window.onscrollend=()=>{
+    setTimeout(() => {
+      setTotopbtn(false)
+    }, 3000);
+  }
   return (
     <>
       <Toast show={showtoast} hide={() => setShowtoast(false)} text={text} />
-        <Modalview  child={''} show={show} hide={ ()=>setShow(false)}/>
-      <Navbar
-        handlephoneclick={handlephoneclick}
-        handlechange={handlechange}
-        handledeskclick={handledeskclick}
-        onkeydown={onkeydown}
-      />
+      <Navbar handlechange={handlechange} onkeydown={onkeydown} />
       {loading ? (
-        <div>
+        <div className="w-full h-full flex justify-center items-center text-center">
           <Page />
         </div>
       ) : (
-        <div className="w-full h-auto mt-14">
-          <div
-            className={`p-4 grid ${
-              phone
-                ? `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5`
-                : `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
-            } flex-wrap gap-4 align-middle place-items-center justify-items-center justify-center items-center`}
-          >
-            {data.map((item) => {
-              return (
-                <Card
-                  key={item?.id}
-                  id={item.id}
-                  img={phone ? item?.src?.portrait : item?.src?.landscape}
-                  text={item?.photographer}
-                  alt={item?.alt}
-                  url={item.src.large}
-                />
-              );
-            })}
-          </div>
-          <div className="w-full flex justify-center items-center my-3">
-            <button
-              onClick={loadmore}
-              className={`text-sm sm:text-xl text-black ${
-                isloading
-                  ? "bg-none cursor-not-allowed"
-                  : "bg-btnhover hover:-translate-y-1"
-              }  rounded-md hover:text-white p-2 transition-all`}
+        <>
+          
+          <div className="w-full h-auto mt-14">
+          {totopbtn ? (
+            <div onClick={()=>window.scrollTo({top:0,left:0,behavior:'smooth'})} className="z-30 text-xl sm:text-5xl text-black fixed bottom-3 right-3 hover:animate-pulse cursor-pointer">
+              <FaRegArrowAltCircleUp />
+            </div>
+          ) : (
+            <div className=" "></div>
+          )}
+            <div
+              className={`p-4 grid ${
+                phone
+                  ? `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5`
+                  : `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
+              } flex-wrap gap-4 align-middle place-items-center justify-items-center justify-center items-center`}
             >
-              {isloading ? <Loader w={"full"} /> : "Load More Wallz"}
-            </button>
+              {data.map((item) => {
+                return (
+                  <Card
+                    key={item?.id}
+                    id={item.id}
+                    img={phone ? item?.src?.portrait : item?.src?.landscape}
+                    text={item?.photographer}
+                    alt={item?.alt}
+                    url={item.src.large}
+                  />
+                );
+              })}
+            </div>
+            <div
+              id="bottomdiv"
+              className="w-full  flex justify-center items-center my-3"
+            >
+              <button
+                onClick={loadmore}
+                className={`text-sm sm:text-xl text-black ${
+                  isloading
+                    ? "bg-none cursor-not-allowed"
+                    : "bg-btnhover hover:-translate-y-1"
+                }  rounded-md hover:text-white p-2 transition-all`}
+              >
+                {isloading ? <Loader w={"full"} /> : "Load More Wallz"}
+              </button>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );

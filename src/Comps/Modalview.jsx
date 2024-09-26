@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import { FaRegWindowClose } from "react-icons/fa";
 
-function Modalview({ child,show,hide }) {
-  
+function Modalview({ child, show, hide }) {
   return (
-      show && <div className="z-10 w-screen backdrop-brightness-50 h-screen absolute flex justify-center items-center ">
-        <div className="absolute right-[5%] top-[5%] flex justify-center items-center">
-          <FaRegWindowClose onClick={hide} className="text-3xl text-white cursor-pointer" />
-        </div>
-        <div className="w-full  h-[70%] aspect-square flex justify-center items-center">
+    show && (
+      <div className="absolute top-0 mx-auto z-40 flex justify-center items-center ">
+        <FaRegWindowClose
+          onClick={hide}
+          className="text-3xl text-black cursor-pointer"
+        />
+
+        <div className="w-[80%]  h-[70%] aspect-square flex justify-center items-center">
           {child}
         </div>
-        </div>
+      </div>
+    )
   );
 }
 
