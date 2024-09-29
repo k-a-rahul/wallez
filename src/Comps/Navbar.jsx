@@ -3,7 +3,7 @@ import { LOGO } from "../../export";
 import { HiSearch } from "react-icons/hi";
 
 function Navbar({ handlechange, onkeydown }) {
-  const [data, setData] = useState('cars');
+  const [data, setData] = useState("cars");
   const [navbar, setNavbar] = useState(false);
 
   const fetchData = async () => {
@@ -47,7 +47,7 @@ function Navbar({ handlechange, onkeydown }) {
         <div className="w-full bg-none fixed top-0 z-20 my-1 flex justify-center items-center">
           <div
             className={`${
-              navbar ? "w-[40%]" : ""
+              navbar ? "w-[70%]" : ""
             } delay-75 p-1 transition-all bg-slate-100 rounded-md flex justify-center items-center`}
           >
             <div className="bg-slate-100 text-2xl">
@@ -58,8 +58,8 @@ function Navbar({ handlechange, onkeydown }) {
               onKeyDownCapture={onkeydown}
               onChange={handlechange}
               className={`w-full ${
-                navbar ? "h-11" : ""
-              } h-6 bg-slate-100  sm:w-full p-1 text-xs sm:text-lg text-black rounded-md outline-none transition-all`}
+                navbar ? "h-10" : "h-10"
+              } bg-slate-100  sm:w-full p-1 text-xs sm:text-lg text-black rounded-md outline-none transition-all`}
             />
           </div>
         </div>
@@ -78,21 +78,6 @@ function Navbar({ handlechange, onkeydown }) {
                 />
               </div>
             </div>
-
-            {/* <div className="flex justify-center items-center gap-3">
-        <button
-          onClick={handlephoneclick}
-          className={`text-white text-xs sm:text-sm rounded-md hover:bg-btnhover hover:rounded-md hover:text-black transition-all p-1`}
-        >
-          Phone
-        </button>
-        <button
-          onClick={handledeskclick}
-          className="text-white text-xs sm:text-sm hover:bg-btnhover hover:rounded-md hover:text-black transition-all p-1"
-        >
-          Desktop
-        </button>
-      </div> */}
             <div
               className={`sm:w-[25%] delay-75 p-1 transition-all bg-slate-100 rounded-md flex justify-center items-center`}
             >

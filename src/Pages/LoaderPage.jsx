@@ -1,7 +1,7 @@
 import Lottie from "lottie-react";
 import React from "react";
 import LOADER from "../assets/LoaderAnimation.json"
-export const Page = () => {
+export const LoaderPage = () => {
   return (
     <div className="w-full overflow-hidden h-screen grid grid-cols-1  justify-items-center gap-1 z-20 place-items-center">
       <div className="w-full h-full flex justify-center items-center">

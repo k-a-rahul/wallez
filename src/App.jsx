@@ -3,7 +3,7 @@ import Navbar from "./Comps/Navbar";
 import { Loader } from "./Comps/Loader";
 import { Card } from "./Comps/Card";
 import { Toast } from "./Comps/Toast";
-import { Page } from "./Pages/Page";
+import { LoaderPage } from "./Pages/LoaderPage";
 import { FaRegArrowAltCircleUp } from "react-icons/fa";
 
 function App() {
@@ -38,10 +38,10 @@ function App() {
         throw new Error(`HTTP error! Status: ${response.status}`);
       } else {
         const res = await response.json();
-        setData((prev) => [...prev, ...new Set([...res.photos])]);
+        setData((prev) => [...prev, ...new Set([...res?.photos])]);
       }
     } catch (error) {
-      alert("Fetch error:", error);
+      alert(error);
     } finally {
       setIsloading(false);
     }
@@ -80,6 +80,7 @@ function App() {
       }
     }
   };
+  // console.log(data);
 
   showtoast
     ? setTimeout(() => {
@@ -90,71 +91,79 @@ function App() {
   window.onscroll = () => {
     if (window.scrollY > 100) {
       setTotopbtn(true);
-    } 
-    else ""
+    } else "";
   };
-  window.onscrollend=()=>{
-    setTimeout(() => {
-      setTotopbtn(false)
-    }, 3000);
-  }
+  window.onscrollend = () => {
+    const timer = setTimeout(() => {
+      setTotopbtn(false);
+    }, 4000);
+    return () => {
+      clearTimeout(timer);
+    };
+  };
+
   return (
     <>
       <Toast show={showtoast} hide={() => setShowtoast(false)} text={text} />
       <Navbar handlechange={handlechange} onkeydown={onkeydown} />
-      {loading ? (
-        <div className="w-full h-full flex justify-center items-center text-center">
-          <Page />
-        </div>
-      ) : (
-        <>
-          
-          <div className="w-full h-auto mt-14">
-          {totopbtn ? (
-            <div onClick={()=>window.scrollTo({top:0,left:0,behavior:'smooth'})} className="z-30 text-xl sm:text-5xl text-black fixed bottom-3 right-3 hover:animate-pulse cursor-pointer">
-              <FaRegArrowAltCircleUp />
-            </div>
-          ) : (
-            <div className=" "></div>
-          )}
-            <div
-              className={`p-4 grid ${
-                phone
-                  ? `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5`
-                  : `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
-              } flex-wrap gap-4 align-middle place-items-center justify-items-center justify-center items-center`}
-            >
-              {data.map((item) => {
-                return (
-                  <Card
-                    key={item?.id}
-                    id={item.id}
-                    img={phone ? item?.src?.portrait : item?.src?.landscape}
-                    text={item?.photographer}
-                    alt={item?.alt}
-                    url={item.src.large}
-                  />
-                );
-              })}
-            </div>
-            <div
-              id="bottomdiv"
-              className="w-full  flex justify-center items-center my-3"
-            >
-              <button
-                onClick={loadmore}
-                className={`text-sm sm:text-xl text-black ${
-                  isloading
-                    ? "bg-none cursor-not-allowed"
-                    : "bg-btnhover hover:-translate-y-1"
-                }  rounded-md hover:text-white p-2 transition-all`}
-              >
-                {isloading ? <Loader w={"full"} /> : "Load More Wallz"}
-              </button>
-            </div>
+
+      <div className="w-full h-auto mt-14">
+        {totopbtn ? (
+          <div
+            onClick={() =>
+              window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+            }
+            className="z-30 text-xl sm:text-5xl text-black fixed bottom-3 right-3 hover:scale-105 cursor-pointer"
+          >
+            <FaRegArrowAltCircleUp />
           </div>
-        </>
-      )}
+        ) : (
+          <div className=" "></div>
+        )}
+
+        {loading ? (
+          <div className="w-full h-full flex justify-center items-center text-center">
+            <LoaderPage />
+          </div>
+        ) : (
+          <div
+            className={`p-4 grid ${
+              phone
+                ? `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5`
+                : `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
+            } flex-wrap gap-4 align-middle place-items-center justify-items-center justify-center items-center`}
+          >
+            {data?.map((item) => {
+              return (
+                <Card
+                  key={item?.id}
+                  id={item.id}
+                  img={phone ? item?.src?.portrait : item?.src?.landscape}
+                  text={item?.photographer}
+                  alt={item?.alt}
+                  url={item.src.large2x}
+                />
+              );
+            })}
+          </div>
+        )}
+
+        <div
+          id="bottomdiv"
+          className="w-full  flex justify-center items-center my-3"
+        >
+          <button
+            onClick={loadmore}
+            className={`text-sm sm:text-xl text-black ${
+              isloading
+                ? "bg-none cursor-not-allowed"
+                : "bg-btnhover hover:-translate-y-1"
+            }  rounded-md hover:text-white p-2 transition-all`}
+          >
+            {isloading ? <Loader w={"full"} /> : "Load More Wallz"}
+          </button>
+        </div>
+      </div>
     </>
   );
 }
