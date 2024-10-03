@@ -78,8 +78,8 @@ function Navbar({ handlechange, onkeydown, ...rest }) {
     window.location.reload();
   };
 
-  document.onscroll = () => {
-    if (window.scrollY > 50) {
+  window.onscroll = () => {
+    if (window.scrollY > 300) {
       setNavbar(true);
     } else {
       setNavbar(false);
@@ -88,41 +88,30 @@ function Navbar({ handlechange, onkeydown, ...rest }) {
 
   return (
     <>
-      <div
-        className={`w-full p-2 flex justify-between items-center bg-mainbg absolute top-2 `}
-      >
         {navbar ? (
-          <div className="w-full fixed top-1 z-50 flex justify-center">
+          <div
+            className={`w-full fixed top-2 z-20 flex justify-center items-center p-2 transition-all`}
+          >
             <input
               placeholder={`Search for "${word}"`}
               onKeyDownCapture={onkeydown}
               onChange={handlechange}
-              className={` ${
-                navbar ? "h-10 w-1/2" : "h-8 sm:w-1/2 "
-              } bg-slate-100   p-1 text-xs sm:text-lg text-black rounded-md outline-none transition-all`}
+              className={`w-[75%] sm:w-[55%] h-10 bg-slate-100  p-1 text-xs sm:text-lg text-black rounded-md outline-none transition-all`}
             />
+            <div></div>
           </div>
         ) : (
-          <div className="w-full flex justify-between items-center">
-            <div className={`w-12 `}>
-              <img
-                onClick={handleclick}
-                src={LOGO}
-                className="cursor-pointer hover:opacity-80 rounded-md mx-4 w-10 sm:w-12 "
-                alt=""
-              />
-              <div className="w-full flex justify-center">
-                <input
-                  placeholder={`Search for "${word}"`}
-                  onKeyDownCapture={onkeydown}
-                  onChange={handlechange}
-                  className={`  bg-slate-100   p-1 text-xs sm:text-lg text-black rounded-md outline-none transition-all`}
-                />
-              </div>
-            </div>
+          <div
+            className={`w-full bg-mainbg fixed top-0 z-50 p-2 flex justify-between items-center transition-all `}
+          >
+            <img
+              onClick={handleclick}
+              src={LOGO}
+              className="cursor-pointer hover:opacity-80 rounded-md mx-4 w-12 sm:w-14 "
+              alt=""
+            />
           </div>
         )}
-      </div>
     </>
   );
 }

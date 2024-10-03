@@ -14,7 +14,6 @@ function App() {
   const [phone, setPhone] = useState(true);
   const [showtoast, setShowtoast] = useState(false);
   const [text, setText] = useState("");
-  const [loading, setLoading] = useState(false);
   const [totopbtn, setTotopbtn] = useState(false);
 
   const randompage = () => Math.ceil(Math.random() * 100);
@@ -27,7 +26,7 @@ function App() {
   }, []);
 
   const fetchData = async ({ param }) => {
-    setIsloading(true);
+    setIsloading(true)
     try {
       const response = await fetch(`${baseurl}${param}`, {
         headers: {
@@ -43,7 +42,7 @@ function App() {
     } catch (error) {
       alert(error);
     } finally {
-      setIsloading(false);
+      setIsloading(false)
     }
   };
 
@@ -66,26 +65,24 @@ function App() {
 
   const onkeydown = (e) => {
     if (e.key === "Enter") {
+      setIsloading(true)
       if ([""].includes(query)) {
         setText("Enter a valid keyword to search");
         setShowtoast(true);
       } else {
-        setLoading(true);
         fetchData({ param: `search?query=${query}` });
-        const loadtime = setTimeout(() => {
-          setLoading(false);
-        }, 2000);
-        () => clearTimeout(loadtime);
+        setText("Data Added to bottom of Page");
+        setShowtoast(true);
         const scrolltime = setTimeout(() => {
           scrolldown();
-        }, 2000);
+        }, 1500);
+        setIsloading(false)
       }
     }
   };
   let timer;
-  window.onscroll = () => {
+  document.onscroll = () => {
     setTotopbtn(true);
-    clearTimeout(timer);
   };
   window.onscrollend = () => {
     timer = setTimeout(() => {
@@ -95,7 +92,7 @@ function App() {
 
   return (
     <>
-      <Toast show={showtoast} hide={() => setShowtoast(false)} text={text} />
+      <Toast bg={'bg-green-400'} show={showtoast} hide={() => setShowtoast(false)} text={text} />
       <div className="my-14 transition-all ">
         <Navbar
           fetchdata={fetchData}
@@ -115,10 +112,10 @@ function App() {
             <FaRegArrowAltCircleUp />
           </div>
         ) : (
-          <div className=" "></div>
+          ''
         )}
 
-        {/* {loading ? (
+        {/* {loader ? (
           <div className="w-full h-full flex justify-center items-center text-center">
             <LoaderPage />
           </div>
@@ -154,13 +151,13 @@ function App() {
                 isloading
                   ? "bg-none cursor-not-allowed"
                   : "bg-btnhover hover:-translate-y-1"
-              }  rounded-md hover:text-white p-4 transition-all`}
+              }  rounded-md hover:text-white p-2 transition-all`}
             >
               {isloading ? <Loader /> : "Load More Wallz"}
             </button>
           </div>
         </>
-        {/* )} */}
+        {/* )}  */}
       </div>
       <div className="w-full h-[50%] bg-mainbg"></div>
     </>
