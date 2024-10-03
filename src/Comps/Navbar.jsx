@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { LOGO } from "../../export";
 import { HiSearch } from "react-icons/hi";
 
-function Navbar({ handlechange, onkeydown }) {
+function Navbar({ handlechange, onkeydown, ...rest }) {
   const [data, setData] = useState("cars");
   const [navbar, setNavbar] = useState(false);
   const [word, setWord] = useState("nature");
@@ -121,8 +121,8 @@ function Navbar({ handlechange, onkeydown }) {
               </div>
             </div>
           </div>
-        </>
-      )}
+        )}
+      </div>
     </>
   );
 }

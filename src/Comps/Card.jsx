@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { HiOutlineDownload } from "react-icons/hi";
 
 export const Card = ({
   id,
@@ -15,16 +16,24 @@ export const Card = ({
   return (
     <>
       <div
-        onClick={onclick}
         className={`w-${w ? w : "full"} h-${
           h ? h : "full"
-        } rounded-md sm:hover:scale-105 transition-all group flex flex-col justify-center items-center`}
+        } rounded-md sm:hover:opacity-100 opacity-95 transition-all group flex flex-col justify-center items-center `}
       >
-        
-        <img id={id} src={img} alt={alt} className="rounded-md" />
-        <span className="backdrop-blur-sm absolute bottom-5 left-3 p-1 rounded-md text-sm sm:text-md text-white invisible group-hover:visible">
-          Credit : {text}
-        </span>
+          <img id={id} src={img} alt={alt} className="rounded-md w-[100%]" />
+        {/* <div className="w-full absolute top-0 left-0 flex justify-between items-center group-hover:visible">
+          <a
+            className="bg-green-300 p-2 px-6 rounded-full text-2xl"
+            href={url}
+            download={`${id}.jpeg`}
+            target="_blank"
+          >
+            <HiOutlineDownload />
+          </a>
+          <span className="backdrop-blur-sm p-1 rounded-md text-sm sm:text-md text-black invisible group-hover:visible group-hover:shadow-lg">
+            Credit : {text}
+          </span>
+        </div> */}
       </div>
     </>
   );

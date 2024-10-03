@@ -58,10 +58,11 @@ function App() {
   const handlechange = (e) => {
     setQuery(e.target.value);
   };
-  const scrolldown = () =>
+  const scrolldown = () => {
     document
       .getElementById("bottomdiv")
       .scrollIntoView({ block: "start", behavior: "smooth" });
+  };
 
   const onkeydown = (e) => {
     if (e.key === "Enter") {
@@ -71,49 +72,45 @@ function App() {
       } else {
         setLoading(true);
         fetchData({ param: `search?query=${query}` });
-        setTimeout(() => {
+        const loadtime = setTimeout(() => {
           setLoading(false);
-        }, 3000);
-        setTimeout(() => {
+        }, 2000);
+        () => clearTimeout(loadtime);
+        const scrolltime = setTimeout(() => {
           scrolldown();
-        }, 3500);
+        }, 2000);
       }
     }
   };
-  // console.log(data);
-
-  showtoast
-    ? setTimeout(() => {
-        hide();
-      }, 5000)
-    : "";
-
+  let timer;
   window.onscroll = () => {
-    if (window.scrollY > 100) {
-      setTotopbtn(true);
-    } else "";
+    setTotopbtn(true);
+    clearTimeout(timer);
   };
   window.onscrollend = () => {
-    const timer = setTimeout(() => {
+    timer = setTimeout(() => {
       setTotopbtn(false);
-    }, 4000);
-    return () => {
-      clearTimeout(timer);
-    };
+    }, 5000);
   };
 
   return (
     <>
       <Toast show={showtoast} hide={() => setShowtoast(false)} text={text} />
-      <Navbar handlechange={handlechange} onkeydown={onkeydown} />
+      <div className="my-14 transition-all ">
+        <Navbar
+          fetchdata={fetchData}
+          handlechange={handlechange}
+          onkeydown={onkeydown}
+        />
+      </div>
 
-      <div className="w-full h-auto mt-14">
+      <div className="w-full h-auto mt-0">
         {totopbtn ? (
           <div
             onClick={() =>
               window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
             }
-            className="z-30 text-xl sm:text-5xl text-black fixed bottom-3 right-3 hover:scale-105 cursor-pointer"
+            className="z-30 text-4xl sm:text-5xl text-white bg-blue-300 rounded-full fixed bottom-3 right-10 hover:bg-blue-500 cursor-pointer"
           >
             <FaRegArrowAltCircleUp />
           </div>
@@ -121,17 +118,18 @@ function App() {
           <div className=" "></div>
         )}
 
-        {loading ? (
+        {/* {loading ? (
           <div className="w-full h-full flex justify-center items-center text-center">
             <LoaderPage />
           </div>
-        ) : (
+        ) : ( */}
+        <>
           <div
             className={`p-4 grid ${
               phone
                 ? `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5`
                 : `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
-            } flex-wrap gap-4 align-middle place-items-center justify-items-center justify-center items-center`}
+            } flex-wrap gap-2 align-middle place-items-center justify-items-center justify-center items-center`}
           >
             {data?.map((item) => {
               return (
@@ -146,24 +144,25 @@ function App() {
               );
             })}
           </div>
-        )}
-
-        <div
-          id="bottomdiv"
-          className="w-full  flex justify-center items-center my-3"
-        >
-          <button
-            onClick={loadmore}
-            className={`text-sm sm:text-xl text-black ${
-              isloading
-                ? "bg-none cursor-not-allowed"
-                : "bg-btnhover hover:-translate-y-1"
-            }  rounded-md hover:text-white p-2 transition-all`}
+          <div
+            id="bottomdiv"
+            className="w-full  flex justify-center items-center my-3"
           >
-            {isloading ? <Loader w={"full"} /> : "Load More Wallz"}
-          </button>
-        </div>
+            <button
+              onClick={loadmore}
+              className={`text-sm sm:text-xl text-black ${
+                isloading
+                  ? "bg-none cursor-not-allowed"
+                  : "bg-btnhover hover:-translate-y-1"
+              }  rounded-md hover:text-white p-4 transition-all`}
+            >
+              {isloading ? <Loader /> : "Load More Wallz"}
+            </button>
+          </div>
+        </>
+        {/* )} */}
       </div>
+      <div className="w-full h-[50%] bg-mainbg"></div>
     </>
   );
 }
