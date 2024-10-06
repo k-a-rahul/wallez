@@ -5,6 +5,7 @@ import { Card } from "./Comps/Card";
 import { Toast } from "./Comps/Toast";
 import { LoaderPage } from "./Pages/LoaderPage";
 import { FaRegArrowAltCircleUp } from "react-icons/fa";
+import { Footer } from "./Comps/Footer";
 
 function App() {
   const [data, setData] = useState([]);
@@ -15,6 +16,8 @@ function App() {
   const [showtoast, setShowtoast] = useState(false);
   const [text, setText] = useState("");
   const [totopbtn, setTotopbtn] = useState(false);
+  const [searchload, setSearchload] = useState(false);
+  const [pageLoader, setPageLoader] = useState(false);
 
   const randompage = () => Math.ceil(Math.random() * 100);
 
@@ -22,11 +25,15 @@ function App() {
   const apiKey = "zE9INGvMnSBQJJ4lp3DVIAWNvfyWqwW4Jj50FYMaRSzJr8PR5xDsRK8Q";
 
   useEffect(() => {
+    setPageLoader(true)
     fetchData({ param: `curated?page=${randompage()}` });
+    setTimeout(() => {
+      setPageLoader(false)
+    }, 2000);
   }, []);
 
   const fetchData = async ({ param }) => {
-    setIsloading(true)
+    setIsloading(true);
     try {
       const response = await fetch(`${baseurl}${param}`, {
         headers: {
@@ -42,7 +49,7 @@ function App() {
     } catch (error) {
       alert(error);
     } finally {
-      setIsloading(false)
+      setIsloading(false);
     }
   };
 
@@ -65,43 +72,53 @@ function App() {
 
   const onkeydown = (e) => {
     if (e.key === "Enter") {
-      setIsloading(true)
       if ([""].includes(query)) {
         setText("Enter a valid keyword to search");
         setShowtoast(true);
       } else {
+        setSearchload(true);
         fetchData({ param: `search?query=${query}` });
-        setText("Data Added to bottom of Page");
-        setShowtoast(true);
         const scrolltime = setTimeout(() => {
+          setSearchload(false);
           scrolldown();
-        }, 1500);
-        setIsloading(false)
+        }, 2500);
       }
     }
   };
-  let timer;
   document.onscroll = () => {
     setTotopbtn(true);
   };
   window.onscrollend = () => {
-    timer = setTimeout(() => {
+    setTimeout(() => {
       setTotopbtn(false);
     }, 5000);
   };
-
+  const handleviewchange = () => {
+    setPhone((prev) => !prev);
+    setPageLoader(true)
+    setTimeout(() => {
+      setPageLoader(false)
+    }, 4000);
+  };
   return (
     <>
-      <Toast bg={'bg-green-400'} show={showtoast} hide={() => setShowtoast(false)} text={text} />
+      <Toast
+        bg={"bg-green-400"}
+        show={showtoast}
+        hide={() => setShowtoast(false)}
+        text={text}
+      />
       <div className="my-14 transition-all ">
         <Navbar
+          handleviewchange={handleviewchange}
+          searchload={searchload}
           fetchdata={fetchData}
           handlechange={handlechange}
           onkeydown={onkeydown}
         />
       </div>
 
-      <div className="w-full h-auto mt-0">
+      <div className="w-full mt-0">
         {totopbtn ? (
           <div
             onClick={() =>
@@ -112,35 +129,35 @@ function App() {
             <FaRegArrowAltCircleUp />
           </div>
         ) : (
-          ''
+          ""
         )}
 
-        {/* {loader ? (
-          <div className="w-full h-full flex justify-center items-center text-center">
-            <LoaderPage />
-          </div>
-        ) : ( */}
         <>
-          <div
-            className={`p-4 grid ${
-              phone
-                ? `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5`
-                : `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
-            } flex-wrap gap-2 align-middle place-items-center justify-items-center justify-center items-center`}
-          >
-            {data?.map((item) => {
-              return (
-                <Card
-                  key={item?.id}
-                  id={item.id}
-                  img={phone ? item?.src?.portrait : item?.src?.landscape}
-                  text={item?.photographer}
-                  alt={item?.alt}
-                  url={item.src.large2x}
-                />
-              );
-            })}
-          </div>
+          {pageLoader ? (
+            <div> <LoaderPage/></div>
+          ) : (
+            <div
+              className={`p-4 grid ${
+                phone
+                  ? `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5`
+                  : `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
+              } flex-wrap gap-2 align-middle place-items-center justify-items-center justify-center items-center`}
+            >
+              {data?.map((item) => {
+                return (
+                  <Card
+                    key={item?.id}
+                    id={item.id}
+                    img={phone ? item?.src?.portrait : item?.src?.landscape}
+                    text={item?.photographer}
+                    alt={item?.alt}
+                    url={item.src.large2x}
+                  />
+                );
+              })}
+            </div>
+          )}
+
           <div
             id="bottomdiv"
             className="w-full  flex justify-center items-center my-3"
@@ -157,9 +174,10 @@ function App() {
             </button>
           </div>
         </>
-        {/* )}  */}
       </div>
-      <div className="w-full h-[50%] bg-mainbg"></div>
+      <div className="relative bottom-0 w-full ">
+        <Footer />
+      </div>
     </>
   );
 }

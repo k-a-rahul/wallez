@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { LOGO } from "../../export";
 import { HiSearch } from "react-icons/hi";
+import Lottie from "lottie-react";
+import LOADER from "../assets/LoaderAnimation.json"
 
 function Navbar({ handlechange, onkeydown, ...rest }) {
   const [data, setData] = useState("cars");
   const [navbar, setNavbar] = useState(false);
   const [word, setWord] = useState("nature");
   const [count, setCount] = useState(0);
+
   const randomWords = [
     "apple",
     "sunshine",
@@ -59,7 +62,9 @@ function Navbar({ handlechange, onkeydown, ...rest }) {
     "nectar",
     "twilight",
   ];
-
+         
+  const {searchload,handleviewchange,value} = rest
+  
   useEffect(() => {
     if (count < randomWords.length) {
       const timer = setInterval(() => {
@@ -79,31 +84,24 @@ function Navbar({ handlechange, onkeydown, ...rest }) {
   };
 
   window.onscroll = () => {
-    if (window.scrollY > 300) {
+    if (window.scrollY) {
       setNavbar(true);
     } else {
       setNavbar(false);
     }
   };
+  
+  
 
   return (
     <>
-        {navbar ? (
-          <div
-            className={`w-full fixed top-2 z-20 flex justify-center items-center p-2 transition-all`}
-          >
-            <input
-              placeholder={`Search for "${word}"`}
-              onKeyDownCapture={onkeydown}
-              onChange={handlechange}
-              className={`w-[75%] sm:w-[55%] h-10 bg-slate-100  p-1 text-xs sm:text-lg text-black rounded-md outline-none transition-all`}
-            />
-            <div></div>
-          </div>
-        ) : (
-          <div
-            className={`w-full bg-mainbg fixed top-0 z-50 p-2 flex justify-between items-center transition-all `}
-          >
+      <div
+        className={`w-full ${
+          navbar ? " bg-none backdrop-blur-sm" : "bg-none"
+        } fixed top-0 z-50 p-2 flex justify-between items-center transition-all `}
+      >
+       
+          <div>
             <img
               onClick={handleclick}
               src={LOGO}
@@ -111,7 +109,27 @@ function Navbar({ handlechange, onkeydown, ...rest }) {
               alt=""
             />
           </div>
-        )}
+        <div className={`w-[40a%] sm:w-[35%] h-10 bg-slate-100 text-xs sm:text-lg text-black rounded-md outline-none transition-all flex justify-center items-center`}>
+        <input
+          placeholder={`Search for "${word }"`}
+          onKeyDownCapture={onkeydown}
+          onChange={handlechange}
+          className={`${searchload ? 'w-[90%]':'w-full'} p-1 h-10 bg-slate-100 text-xs sm:text-lg rounded-md text-black `}
+          />
+            {searchload ? <Lottie animationData={LOADER} className='w-24'   />:'' }
+          </div>
+        <div>
+          <select
+            onChange={handleviewchange}
+            value={value}
+            name="viewselect"
+            className="bg-slate-200 w-24 sm:w-36 p-1 rounded-md text-xs sm:text-base"
+          >
+            <option value="portrait" onChange={handleviewchange} className="text-xs sm:text-base">Portrait</option>
+            <option value="landscape" onChange={handleviewchange} className="text-xs sm:text-base">Landscape</option>
+          </select>
+        </div>
+      </div>
     </>
   );
 }

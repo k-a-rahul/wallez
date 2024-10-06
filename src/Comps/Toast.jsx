@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { IoMdCloseCircle } from "react-icons/io";
 
 export const Toast = ({ text, show, hide, bg }) => {
-  
+ 
   
   return (
     show && (
-      <div className="z-40 w-full flex justify-center items-center text-center fixed top-4">
+      <div className="z-50 w-full flex justify-center items-center text-center fixed top-4">
         <div
           className={`z-10 rounded-full  ${
             bg ? bg : "bg-red-500"
