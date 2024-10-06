@@ -18,6 +18,7 @@ function App() {
   const [totopbtn, setTotopbtn] = useState(false);
   const [searchload, setSearchload] = useState(false);
   const [pageLoader, setPageLoader] = useState(false);
+  const [skeleton,setSkeleton] = useState(false)
 
   const randompage = () => Math.ceil(Math.random() * 100);
 
@@ -25,10 +26,10 @@ function App() {
   const apiKey = "zE9INGvMnSBQJJ4lp3DVIAWNvfyWqwW4Jj50FYMaRSzJr8PR5xDsRK8Q";
 
   useEffect(() => {
-    setPageLoader(true)
+    setPageLoader(true);
     fetchData({ param: `curated?page=${randompage()}` });
     setTimeout(() => {
-      setPageLoader(false)
+      setPageLoader(false);
     }, 2000);
   }, []);
 
@@ -60,44 +61,46 @@ function App() {
       : (setPage((prevpage) => prevpage + 1),
         fetchData({ param: `search?query=${query}&page=${page + 1}` }));
   };
-
-  const handlechange = (e) => {
-    setQuery(e.target.value);
-  };
   const scrolldown = () => {
     document
       .getElementById("bottomdiv")
       .scrollIntoView({ block: "start", behavior: "smooth" });
   };
 
-  const onkeydown = (e) => {
-    if (e.key === "Enter") {
-      if ([""].includes(query)) {
-        setText("Enter a valid keyword to search");
-        setShowtoast(true);
-      } else {
-        setSearchload(true);
-        fetchData({ param: `search?query=${query}` });
-        const scrolltime = setTimeout(() => {
-          setSearchload(false);
-          scrolldown();
-        }, 2500);
-      }
-    }
+  const handlechange = (e) => {
+    setQuery(e.target.value);
   };
+
+
+  // const onkeydown = (e) => {
+  //   if (e.key === "Enter") {
+  //     if ([""].includes(query)) {
+  //       setText("Enter a valid keyword to search");
+  //       setShowtoast(true);
+  //     } else {
+  //       setSearchload(true);
+  //       fetchData({ param: `search?query=${query}` });
+  //       const scrolltime = setTimeout(() => {
+  //         setSearchload(false);
+  //         scrolldown();
+  //       }, 2500);
+  //     }
+  //   }
+  // };
   document.onscroll = () => {
     setTotopbtn(true);
+    clearTimeout(timer)
   };
-  window.onscrollend = () => {
-    setTimeout(() => {
+  
+    const timer = setTimeout(() => {
       setTotopbtn(false);
     }, 5000);
-  };
+  
   const handleviewchange = () => {
     setPhone((prev) => !prev);
-    setPageLoader(true)
+    setPageLoader(true);
     setTimeout(() => {
-      setPageLoader(false)
+      setPageLoader(false);
     }, 4000);
   };
   return (
@@ -134,7 +137,10 @@ function App() {
 
         <>
           {pageLoader ? (
-            <div> <LoaderPage/></div>
+            <div>
+              {" "}
+              <LoaderPage />
+            </div>
           ) : (
             <div
               className={`p-4 grid ${
@@ -146,6 +152,7 @@ function App() {
               {data?.map((item) => {
                 return (
                   <Card
+                    skeleton={skeleton}
                     key={item?.id}
                     id={item.id}
                     img={phone ? item?.src?.portrait : item?.src?.landscape}

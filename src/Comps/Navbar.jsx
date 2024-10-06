@@ -97,7 +97,7 @@ function Navbar({ handlechange, onkeydown, ...rest }) {
     <>
       <div
         className={`w-full ${
-          navbar ? " bg-none backdrop-blur-sm" : "bg-none"
+          navbar ? " bg-none backdrop-blur-2xl" : "bg-none"
         } fixed top-0 z-50 p-2 flex justify-between items-center transition-all `}
       >
        
