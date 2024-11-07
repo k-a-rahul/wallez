@@ -18,7 +18,7 @@ function App() {
   const [totopbtn, setTotopbtn] = useState(false);
   const [searchload, setSearchload] = useState(false);
   const [pageLoader, setPageLoader] = useState(false);
-  const [skeleton,setSkeleton] = useState(false)
+  const [skeleton, setSkeleton] = useState(false);
 
   const randompage = () => Math.ceil(Math.random() * 100);
 
@@ -26,11 +26,8 @@ function App() {
   const apiKey = "zE9INGvMnSBQJJ4lp3DVIAWNvfyWqwW4Jj50FYMaRSzJr8PR5xDsRK8Q";
 
   useEffect(() => {
-    setPageLoader(true);
     fetchData({ param: `curated?page=${randompage()}` });
-    setTimeout(() => {
-      setPageLoader(false);
-    }, 2000);
+    setTimeout(() => {}, 2000);
   }, []);
 
   const fetchData = async ({ param }) => {
@@ -71,31 +68,28 @@ function App() {
     setQuery(e.target.value);
   };
 
-
-  // const onkeydown = (e) => {
-  //   if (e.key === "Enter") {
-  //     if ([""].includes(query)) {
-  //       setText("Enter a valid keyword to search");
-  //       setShowtoast(true);
-  //     } else {
-  //       setSearchload(true);
-  //       fetchData({ param: `search?query=${query}` });
-  //       const scrolltime = setTimeout(() => {
-  //         setSearchload(false);
-  //         scrolldown();
-  //       }, 2500);
-  //     }
-  //   }
-  // };
+  const handleQuery = (e) => {
+    if ([""].includes(query)) {
+      setText("Enter a valid keyword to search");
+      setShowtoast(true);
+    } else {
+      setSearchload(true);
+      fetchData({ param: `search?query=${query}` });
+      const scrolltime = setTimeout(() => {
+        setSearchload(false);
+        scrolldown();
+      }, 2500);
+    }
+  };
   document.onscroll = () => {
     setTotopbtn(true);
-    clearTimeout(timer)
+    clearTimeout(timer);
   };
-  
-    const timer = setTimeout(() => {
-      setTotopbtn(false);
-    }, 5000);
-  
+
+  const timer = setTimeout(() => {
+    setTotopbtn(false);
+  }, 5000);
+
   const handleviewchange = () => {
     setPhone((prev) => !prev);
     setPageLoader(true);
@@ -105,19 +99,14 @@ function App() {
   };
   return (
     <>
-      <Toast
-        bg={"bg-green-400"}
-        show={showtoast}
-        hide={() => setShowtoast(false)}
-        text={text}
-      />
+      <Toast show={showtoast} hide={() => setShowtoast(false)} text={text} />
       <div className="my-14 transition-all ">
         <Navbar
           handleviewchange={handleviewchange}
           searchload={searchload}
           fetchdata={fetchData}
           handlechange={handlechange}
-          onkeydown={onkeydown}
+          onkeydown={handleQuery}
         />
       </div>
 
@@ -136,38 +125,31 @@ function App() {
         )}
 
         <>
-          {pageLoader ? (
-            <div>
-              {" "}
-              <LoaderPage />
-            </div>
-          ) : (
-            <div
-              className={`p-4 grid ${
-                phone
-                  ? `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5`
-                  : `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
-              } flex-wrap gap-2 align-middle place-items-center justify-items-center justify-center items-center`}
-            >
-              {data?.map((item) => {
-                return (
-                  <Card
-                    skeleton={skeleton}
-                    key={item?.id}
-                    id={item.id}
-                    img={phone ? item?.src?.portrait : item?.src?.landscape}
-                    text={item?.photographer}
-                    alt={item?.alt}
-                    url={item.src.large2x}
-                  />
-                );
-              })}
-            </div>
-          )}
+          <div
+            className={`p-4 grid ${
+              phone
+                ? `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5`
+                : `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
+            } flex-wrap gap-2 align-middle place-items-center justify-items-center justify-center items-center`}
+          >
+            {data?.map((item) => {
+              return (
+                <Card
+                  skeleton={skeleton}
+                  key={item?.id}
+                  id={item.id}
+                  img={phone ? item?.src?.portrait : item?.src?.landscape}
+                  text={item?.photographer}
+                  alt={item?.alt}
+                  url={item.src.large2x}
+                />
+              );
+            })}
+          </div>
 
           <div
             id="bottomdiv"
-            className="w-full  flex justify-center items-center my-3"
+            className="w-full flex justify-center items-center my-3"
           >
             <button
               onClick={loadmore}
