@@ -17,7 +17,7 @@ export const Card = ({
   return (
     <>
       <div
-        className={` w-full overflow-hidden h-auto rounded-md  transition-all group flex flex-col justify-center items-center`}
+        className={` w-full overflow-hidden  h-auto rounded-md  transition-all group flex flex-col justify-center items-center`}
       >
         <a href={url} target="_blank">
           <div
@@ -27,7 +27,7 @@ export const Card = ({
               id={id}
               src={img}
               alt={alt}
-              className="rounded-md  hover:scale-110 transition-all duration-[400ms] delay-0"
+              className="rounded-md object-cover  hover:scale-110 transition-all duration-[400ms] delay-0"
             />
           </div>
         </a>

@@ -96,7 +96,7 @@ function Navbar({ handlechange, onkeydown, ...rest }) {
       <div
         className={`w-full ${
           navbar ? " bg-none backdrop-blur-2xl" : "bg-none"
-        } fixed top-0 z-40 p-2 flex justify-between items-center transition-all `}
+        } fixed top-0 z-40 p-2 flex justify-evenly items-center transition-all `}
       >
         <div>
           <img
@@ -113,36 +113,36 @@ function Navbar({ handlechange, onkeydown, ...rest }) {
             placeholder={`Search "${word}"`}
             onChange={handlechange}
             className={`${
-              searchload ? "w-[90%]" : "w-full"
+              searchload ? "w-full" : "w-full"
             } p-1 px-2 h-7 bg-slate-50 focus-visible:outline-none text-xs sm:text-lg rounded-md text-black `}
           />
 
           {searchload ? (
-            <Lottie animationData={LOADER} className="w-24" />
+            <Lottie animationData={LOADER} className="w-16" />
           ) : (
             <button className="w-16" onClick={onkeydown}>
               Go
             </button>
           )}
         </div>
-        <div>
+        <div className="text-xs">
           <select
             onChange={handleviewchange}
             value={value}
             name="viewselect"
-            className="bg-slate-200 w-24 sm:w-36 p-1 rounded-md text-xs sm:text-base"
+            className="bg-slate-200 w-20 sm:w-36 p-1 rounded-md text-xs mr-4 sm:mr-0 sm:text-base overflow-hidden"
           >
             <option
               value="portrait"
               onChange={handleviewchange}
-              className="text-xs sm:text-base"
+              className=" text-xs sm:text-base"
             >
               Portrait
             </option>
             <option
               value="landscape"
               onChange={handleviewchange}
-              className="text-xs sm:text-base"
+              className=" text-xs sm:text-base"
             >
               Landscape
             </option>
